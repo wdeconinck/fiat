@@ -123,7 +123,7 @@ jobs:
     # Free up disk space for nvhpc
     - name: Free Disk Space (Ubuntu)
       uses: jlumbroso/free-disk-space@main
-      if: contains( matrix.arch, 'nvhpc' )
+      if: contains( matrix.compiler, 'nvhpc' )
       continue-on-error: true
       with:
         # this might remove tools that are actually needed,
