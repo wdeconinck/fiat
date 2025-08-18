@@ -101,7 +101,10 @@ else()
 endif()
 
 if( HAVE_OMP )
-    target_link_libraries( fiat PRIVATE OpenMP::OpenMP_Fortran OpenMP::OpenMP_C )
+    target_link_libraries( fiat PRIVATE OpenMP::OpenMP_Fortran )
+    if( TARGET OpenMP::OpenMP_C )
+      target_link_libraries( fiat PRIVATE OpenMP::OpenMP_C )
+    endif()
 endif()
 
 fiat_target_ignore_missing_symbols( TARGET fiat SYMBOLS

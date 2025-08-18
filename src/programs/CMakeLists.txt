@@ -50,7 +50,6 @@ endforeach()
 # Note: it only depends on MPI and OpenMP
 ecbuild_add_executable(TARGET fiat-printbinding
   SOURCES fiat-printbinding.c )
-find_package( OpenMP COMPONENTS C )
 if( TARGET OpenMP::OpenMP_C )
   target_link_libraries( fiat-printbinding OpenMP::OpenMP_C )
 endif()
