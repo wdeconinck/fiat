@@ -12,17 +12,18 @@ set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} )
 # Tests: fiat_test_mpl_allocator
 #   test that MPL allocator functionality works
 
-find_package(pluto)
-set(HAVE_PLUTO 0)
-if (pluto_FOUND)
-  set(HAVE_PLUTO 1)
-endif()
+fiat_preprocess_fypp_sources( fypp_preprocessed_sources
+    SOURCES
+        mpl_allocator_mod.fypp
+        mpl_allocator_smod.fypp
+        internal/fiat_buddy_mod.fypp
+        internal/fiat_buddy_smod.fypp
+)
+
 ecbuild_add_test(
     TARGET fiat_test_mpl_allocator
     SOURCES test_mpl_allocator.F90
-            mpl_allocator_mod.F90
-            mpl_allocator_smod.F90
-            internal/fiat_buddy_mod.F90
+            ${fypp_preprocessed_sources}
             internal/fiat_buddy_mod.cc
             internal/buddy_alloc.h
     LIBS    ${fiatlib} $<${HAVE_PLUTO}:pluto_f>
