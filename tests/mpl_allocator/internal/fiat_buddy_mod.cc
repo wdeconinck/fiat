@@ -13,15 +13,13 @@
 #include <cstdlib>
 #include <cstring>
 
-#define BUDDY_CPP_NAMESPACE fiat_detail
+namespace
+{
+#define BUDDY_CPP_MANGLED
 #define BUDDY_ALLOC_IMPLEMENTATION
-#include "buddy_alloc.h"
+#include "buddy_alloc/buddy_alloc.h"
 #undef BUDDY_ALLOC_IMPLEMENTATION
-
-using BUDDY_CPP_NAMESPACE::buddy;
-using BUDDY_CPP_NAMESPACE::buddy_sizeof;
-using BUDDY_CPP_NAMESPACE::buddy_init;
-using BUDDY_CPP_NAMESPACE::buddy_free;
+}
 
 typedef struct
 {

@@ -25,7 +25,7 @@ ecbuild_add_test(
     SOURCES test_mpl_allocator.F90
             ${fypp_preprocessed_sources}
             internal/fiat_buddy_mod.cc
-            internal/buddy_alloc.h
+            internal/buddy_alloc/buddy_alloc.h
     LIBS    ${fiatlib} $<${HAVE_PLUTO}:pluto_f>
     DEFINITIONS HAVE_PLUTO=${HAVE_PLUTO}
     LINKER_LANGUAGE Fortran
