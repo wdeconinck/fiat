@@ -8,7 +8,7 @@
 
 SUBMODULE (MPL_ALLOCATOR_MOD) MPL_ALLOCATOR_SMOD
 
-#:set ranks  = [1,2,3,4] #! Rank 5 is not supported in pluto yet
+#:set ranks  = [1,2,3,4,5]
 #:set dtypes = ['INT32','INT64','REAL32','REAL64']
 #:set sizeof = dict(zip(dtypes, ['4', '8', '4', '8']))
 

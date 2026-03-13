@@ -9,7 +9,7 @@
 MODULE MPL_ALLOCATOR_MOD
 USE, INTRINSIC :: ISO_FORTRAN_ENV
 
-#:set ranks  = [1,2,3,4] #! Rank 5 is not supported in pluto yet
+#:set ranks  = [1,2,3,4,5]
 #:set dim    = ['',':',':,:',':,:,:',':,:,:,:',':,:,:,:,:']
 #:set dtypes = ['INT32','INT64','REAL32','REAL64']
 #:set type   = dict(zip(dtypes, ['INTEGER(INT32)', 'INTEGER(INT64)', 'REAL(KIND=REAL32)', 'REAL(KIND=REAL64)']))
