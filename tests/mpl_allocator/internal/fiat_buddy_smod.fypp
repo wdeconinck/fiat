@@ -61,7 +61,7 @@ CONTAINS
 
 SUBROUTINE ASSERT_INITIALISED (SELF)
   TYPE (FIAT_BUDDY) :: SELF
-  #include "abor1.intfb.h"
+#include "abor1.intfb.h"
   IF (.NOT. C_ASSOCIATED (SELF%PTR)) THEN
     CALL ABOR1 ("Error: FIAT_BUDDY allocator not initialised. Please call the INIT method before allocating memory.")
   ENDIF
