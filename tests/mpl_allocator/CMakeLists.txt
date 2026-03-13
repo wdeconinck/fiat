@@ -9,7 +9,7 @@
 set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} )
 
 # ----------------------------------------------------------------------------------------
-# Tests: fiat_test_mpl_allocator
+# fiat_test_mpl_allocator_tests
 #   test that MPL allocator functionality works
 
 fiat_preprocess_fypp_sources( fypp_preprocessed_sources
@@ -20,8 +20,8 @@ fiat_preprocess_fypp_sources( fypp_preprocessed_sources
         internal/fiat_buddy_smod.fypp
 )
 
-ecbuild_add_test(
-    TARGET fiat_test_mpl_allocator
+ecbuild_add_executable(
+    TARGET fiat-test-mpl-allocator
     SOURCES test_mpl_allocator.F90
             ${fypp_preprocessed_sources}
             internal/fiat_buddy_mod.cc
@@ -29,5 +29,52 @@ ecbuild_add_test(
     LIBS    ${fiatlib} $<${HAVE_PLUTO}:pluto_f>
     DEFINITIONS HAVE_PLUTO=${HAVE_PLUTO}
     LINKER_LANGUAGE Fortran
+    NOINSTALL
+)
+
+ecbuild_add_test(
+    TARGET fiat_test_mpl_allocator_no_init
+    COMMAND fiat-test-mpl-allocator
+    ARGS fiat_test_mpl_allocator_no_init
     ENVIRONMENT "MPL=0"
 )
+
+foreach( fiat_test_mpl_allocator_test
+                fiat_test_mpl_allocator_init
+                fiat_test_mpl_allocator_init_size
+                fiat_test_mpl_allocator_init_and_reserve )
+    if (HAVE_PLUTO)
+        set( EXPECTED_MPL_RESOURCE "mpi_pool" )
+    else ()
+        set( EXPECTED_MPL_RESOURCE "BUDDY_ALLOC" )
+    endif()
+
+    ecbuild_add_test(
+        TARGET ${fiat_test_mpl_allocator_test}
+        COMMAND fiat-test-mpl-allocator
+        ARGS ${fiat_test_mpl_allocator_test}
+        ENVIRONMENT "MPL=0" "EXPECTED_MPL_RESOURCE=${EXPECTED_MPL_RESOURCE}"
+    )
+
+    ecbuild_add_test(
+        TARGET ${fiat_test_mpl_allocator_test}_with_changed_default_resource
+        COMMAND fiat-test-mpl-allocator
+        ARGS ${fiat_test_mpl_allocator_test}
+        ENVIRONMENT "MPL=0" "MPL_RESOURCE=FORTRAN" "EXPECTED_MPL_RESOURCE=FORTRAN"
+    )
+
+    unset( RESOURCES )
+    list (APPEND RESOURCES FORTRAN BUDDY_ALLOC )
+    if (HAVE_PLUTO)
+      list(APPEND RESOURCES mpi_pool)
+    endif()
+
+    foreach( resource ${RESOURCES} )
+        ecbuild_add_test(
+            TARGET ${fiat_test_mpl_allocator_test}_${resource}
+            COMMAND fiat-test-mpl-allocator
+            ARGS ${fiat_test_mpl_allocator_test}_${resource}
+            ENVIRONMENT "MPL=0"
+        )
+    endforeach()
+endforeach()

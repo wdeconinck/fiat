@@ -7,8 +7,9 @@
 ! nor does it submit to any jurisdiction.
 
 MODULE MPL_ALLOCATOR_MOD
+USE, INTRINSIC :: ISO_FORTRAN_ENV
 
-#:set ranks  = [1,2,3,4]
+#:set ranks  = [1,2,3,4] #! Rank 5 is not supported in pluto yet
 #:set dim    = ['',':',':,:',':,:,:',':,:,:,:',':,:,:,:,:']
 #:set dtypes = ['INT32','INT64','REAL32','REAL64']
 #:set type   = dict(zip(dtypes, ['INTEGER(INT32)', 'INTEGER(INT64)', 'REAL(KIND=REAL32)', 'REAL(KIND=REAL64)']))
@@ -16,22 +17,23 @@ MODULE MPL_ALLOCATOR_MOD
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: MPL_ALLOCATOR_INIT
-PUBLIC :: MPL_ALLOCATOR_FINALIZE
+PUBLIC :: MPL_ALLOCATOR_FINAL
 PUBLIC :: MPL_ALLOCATOR_INITIALIZED
+PUBLIC :: MPL_ALLOCATOR_RESERVE
+PUBLIC :: MPL_ALLOCATOR_CAPACITY
+PUBLIC :: MPL_ALLOCATOR_ALLOCATED
 PUBLIC :: MPL_ALLOCATE
 PUBLIC :: MPL_DEALLOCATE
 PUBLIC :: MPL_RESOURCE
 
 INTERFACE
-  MODULE FUNCTION MPL_ALLOCATOR_INITIALIZED() RESULT(INITIALIZED)
-    LOGICAL :: INITIALIZED
-  END FUNCTION
 
-  MODULE SUBROUTINE MPL_ALLOCATOR_INIT(RESOURCE, RESERVE)
+  MODULE SUBROUTINE MPL_ALLOCATOR_INIT(RESOURCE, SIZE)
+    !! Initialize the MPL_ALLOCATOR
     CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: RESOURCE
       !! The memory resource to use for the pool allocator. This can be used to select between different underlying memory management
       !! strategies (e.g. a memory pool, a custom allocator, or the system allocator).
-    INTEGER, INTENT(IN), OPTIONAL :: RESERVE
+    INTEGER(INT64), INTENT(IN), OPTIONAL :: SIZE
       !! The amount of memory to reserve in the pool resource, in bytes.
       !! Depending on the underlying RESOURCE, this may be treated as a soft limit (e.g. for a memory pool)
       !! or a hard limit (e.g. for a custom allocator that directly reserves memory from the system).
@@ -39,14 +41,36 @@ INTERFACE
       !! depending on the implementation.
   END SUBROUTINE 
 
-  MODULE SUBROUTINE MPL_ALLOCATOR_FINALIZE()
+  MODULE FUNCTION MPL_ALLOCATOR_INITIALIZED() RESULT(INITIALIZED)
+    !! Return whether the MPL_ALLOCATOR was initialized using MPL_ALLOCATOR_INIT
+    LOGICAL :: INITIALIZED
+  END FUNCTION
+
+  MODULE SUBROUTINE MPL_ALLOCATOR_FINAL()
     !! Finalize the MPL allocator
   END SUBROUTINE
+
+  MODULE SUBROUTINE MPL_ALLOCATOR_RESERVE(SIZE)
+    !! Reserve this amount of memory in bytes in the pool resource.
+    !! This may grow an underlying memory pool with the required size
+    INTEGER(INT64), INTENT(IN) :: SIZE
+  END SUBROUTINE
+
+  MODULE FUNCTION MPL_ALLOCATOR_CAPACITY() RESULT (CAPACITY)
+    !! The amount of memory which is reserved in an underlying memory pool
+    INTEGER(INT64) :: CAPACITY
+  END FUNCTION
+
+  MODULE FUNCTION MPL_ALLOCATOR_ALLOCATED() RESULT (ALLOCATED)
+    !! The amount of memory which is currently used from an underlying memory pool in bytes
+    INTEGER(INT64) :: ALLOCATED
+  END FUNCTION
 
   MODULE FUNCTION MPL_RESOURCE() RESULT(RESOURCE)
     !! Returns the name of the currently initialized memory resource for the MPL allocator
     CHARACTER(LEN=:), ALLOCATABLE :: RESOURCE
   END FUNCTION
+
 END INTERFACE
 
 INTERFACE MPL_ALLOCATE
@@ -77,6 +101,7 @@ INTERFACE
     ${type[dtype]}$, POINTER, INTENT(INOUT) :: ARRAY(${dim[rank]}$) ! Array to be allocated
     INTEGER(INT32), INTENT(IN) :: SHAPE(${rank}$) ! Shape of the array (number of elements in each dimension)
   END SUBROUTINE
+
 #:endfor
 #:endfor
 END INTERFACE
@@ -100,6 +125,7 @@ INTERFACE
     CHARACTER(LEN=*), INTENT(IN) :: LABEL ! Label used for tracing or debugging
     ${type[dtype]}$, POINTER, INTENT(INOUT) :: ARRAY(${dim[rank]}$) ! Array to be deallocated
   END SUBROUTINE
+
 #:endfor
 #:endfor
 END INTERFACE
