@@ -292,24 +292,24 @@ IF( ARGC > 0 ) THEN
             CALL TEST_INIT_NO_SIZE(RESOURCE="FORTRAN")
         ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_BUDDY_ALLOC") THEN
             CALL TEST_INIT_NO_SIZE(RESOURCE="BUDDY_ALLOC")
-        ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_mpi_pool") THEN
-            CALL TEST_INIT_NO_SIZE(RESOURCE="mpi_pool")
+        ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_MPI_POOL") THEN
+            CALL TEST_INIT_NO_SIZE(RESOURCE="MPI_POOL")
         ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_size") THEN
             CALL TEST_INIT_SIZE()
         ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_size_FORTRAN") THEN
             CALL TEST_INIT_SIZE(RESOURCE="FORTRAN")
         ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_size_BUDDY_ALLOC") THEN
             CALL TEST_INIT_SIZE(RESOURCE="BUDDY_ALLOC")
-        ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_size_mpi_pool") THEN
-            CALL TEST_INIT_SIZE(RESOURCE="mpi_pool")
+        ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_size_MPI_POOL") THEN
+            CALL TEST_INIT_SIZE(RESOURCE="MPI_POOL")
         ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_and_reserve") THEN
             CALL TEST_INIT_AND_RESERVE()
         ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_and_reserve_FORTRAN") THEN
             CALL TEST_INIT_AND_RESERVE(RESOURCE="FORTRAN")
         ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_and_reserve_BUDDY_ALLOC") THEN
             CALL TEST_INIT_AND_RESERVE(RESOURCE="BUDDY_ALLOC")
-        ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_and_reserve_mpi_pool") THEN
-            CALL TEST_INIT_AND_RESERVE(RESOURCE="mpi_pool")
+        ELSE IF (TEST_NAME == "fiat_test_mpl_allocator_init_and_reserve_MPI_POOL") THEN
+            CALL TEST_INIT_AND_RESERVE(RESOURCE="MPI_POOL")
         ELSE
             CALL FAIL("Unrecognized testname "//TRIM(TEST_NAME))
         ENDIF

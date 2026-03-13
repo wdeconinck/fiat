@@ -44,7 +44,7 @@ foreach( fiat_test_mpl_allocator_test
                 fiat_test_mpl_allocator_init_size
                 fiat_test_mpl_allocator_init_and_reserve )
     if (HAVE_PLUTO)
-        set( EXPECTED_MPL_RESOURCE "mpi_pool" )
+        set( EXPECTED_MPL_RESOURCE "MPI_POOL" )
     else ()
         set( EXPECTED_MPL_RESOURCE "BUDDY_ALLOC" )
     endif()
@@ -66,7 +66,7 @@ foreach( fiat_test_mpl_allocator_test
     unset( RESOURCES )
     list (APPEND RESOURCES FORTRAN BUDDY_ALLOC )
     if (HAVE_PLUTO)
-      list(APPEND RESOURCES mpi_pool)
+      list(APPEND RESOURCES MPI_POOL)
     endif()
 
     foreach( resource ${RESOURCES} )
